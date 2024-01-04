@@ -1,0 +1,18 @@
+select 
+CONCAT(e.first_name,' ',e.last_name) as name, -- имя и фамилия продавца
+TO_CHAR(sale_date, 'DAY') as weekday,  --название дня недели на английском языке
+SUM(quantity) as income --суммарная выручка продавца в определенный день недели, округленная до целого числа
+from
+employees as e 
+join sales as s on
+s.sales_person_id=e.employee_id
+join products as p on
+p.product_id = s.product_id
+GROUP by
+e.last_name,
+e.first_name,
+weekday
+order by
+name,
+weekday
+;
