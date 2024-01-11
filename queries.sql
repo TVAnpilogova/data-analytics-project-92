@@ -44,9 +44,9 @@ ORDER BY
   average_income ASC;
 
 Третий отчет содержит информацию о выручке по дням недели. Каждая запись содержит имя и фамилию продавца, день недели и суммарную выручку.
-  select 
+ select 
 CONCAT(e.first_name,' ',e.last_name) as name, -- имя и фамилия продавца
-TO_CHAR(sale_date, 'DAY') as weekday,  --название дня недели на английском языке
+TO_CHAR(sale_date, 'day') as weekday,  --название дня недели на английском языке
 SUM(quantity) as income --суммарная выручка продавца в определенный день недели, округленная до целого числа
 from
 employees as e 
