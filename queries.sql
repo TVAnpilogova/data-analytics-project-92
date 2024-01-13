@@ -94,21 +94,26 @@ order by date asc
 Третий отчет следует составить о покупателях, первая покупка которых была в ходе проведения акций (акционные товары отпускали со стоимостью равной 0)
 
 select
-CONCAT(c.first_name,' ',c.last_name) as customer, --имя и фамилия покупателя
-TO_CHAR(MIN(s.sale_date), 'YYYY-MM-DD') as sale_date, --дата покупки
-CONCAT(e.first_name,' ',e.last_name) as seller --имя и фамилия продавца
-from customers as c
-join sales as s on
-s.customer_id = c.customer_id
-join employees as e on
-s.sales_person_id = e.employee_id
-join products as p on 
-p.product_id = s.product_id
+  customer,
+  TO_CHAR(sale_date, 'YYYY-MM-DD') AS sale_date,
+  seller
+from(
+  select
+    CONCAT(c.first_name, ' ', c.last_name) as customer,
+    s.sale_date,
+    CONCAT(e.first_name, ' ', e.last_name) as seller,
+    ROW_NUMBER() OVER (PARTITION BY c.customer_id order by s.sale_date) as row_num
+  from customers as c
+  join sales as s on
+    s.customer_id = c.customer_id
+  join employees as e on
+    s.sales_person_id = e.employee_id
+  join products as p on
+    p.product_id = s.product_id
 where
-p.price = 0
-group by c.customer_id,
-e.employee_id
-order by c.customer_id
+    p.price = 0
+) as zapros
+where
+  row_num = 1
+order by customer
 ;
-
-
