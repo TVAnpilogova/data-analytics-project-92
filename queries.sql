@@ -44,23 +44,23 @@ ORDER BY
   average_income ASC;
 
 Третий отчет содержит информацию о выручке по дням недели. Каждая запись содержит имя и фамилию продавца, день недели и суммарную выручку.
- select 
-CONCAT(e.first_name,' ',e.last_name) as name, -- имя и фамилия продавца
-TO_CHAR(sale_date, 'day') as weekday,  --название дня недели на английском языке
-SUM(quantity) as income --суммарная выручка продавца в определенный день недели, округленная до целого числа
-from
-employees as e 
-join sales as s on
-s.sales_person_id=e.employee_id
-join products as p on
-p.product_id = s.product_id
-GROUP by
-e.last_name,
-e.first_name,
-weekday
-order by
-name,
-weekday
+SELECT 
+  CONCAT(e.first_name, ' ', e.last_name) AS name, -- имя и фамилия продавца
+  TO_CHAR(sale_date, 'day') AS weekday,  -- название дня недели на английском языке
+  ROUND(SUM(p.price * s.quantity), 0) AS income -- суммарная выручка продавца в определенный день недели, округленная до целого числа
+FROM
+  employees AS e 
+JOIN sales AS s ON
+  s.sales_person_id = e.employee_id
+JOIN products AS p ON
+  p.product_id = s.product_id
+GROUP BY
+  e.last_name,
+  e.first_name,
+s.sale_date
+ORDER BY
+  name,
+  CASE WHEN EXTRACT(dow FROM sale_date) = 0 THEN 7 ELSE EXTRACT(dow FROM sale_date) end --извлекается день недели (dow) из sale_date. День недели представлен целым числом, где в SQL воскресенье - 0, а суббота - 6,чтобы сделать 1 - понедельник построенна дополнительная логика
 ;
 
 Первый отчет - количество покупателей в разных возрастных группах: 16-25, 26-40 и 40+
