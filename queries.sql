@@ -83,7 +83,7 @@ ORDER BY
 select
 TO_CHAR(sale_date, 'YYYY-MM') as date, --дата в указанном формате
 COUNT (distinct customer_id) as total_customers, --количество покупателей
-round(sum(distinct s.quantity*p.price),0) as income --принесенная выручка
+round(sum(s.quantity*p.price),0) as income --принесенная выручка
 from sales as s
 join products as p on 
 p.product_id = s.product_id
