@@ -7,7 +7,7 @@ top_10_total_income.csv Первый отчет о десятке лучших �
 select
 CONCAT(e.first_name,' ',e.last_name) as name, --имя и фамилия продавца
 count(s.quantity) as operations, --количество проведенных сделок
-round(sum(p.price*s.quantity),0) as income --суммарная выручка продавца за все время
+floor(sum(p.price*s.quantity)) as income --суммарная выручка продавца за все время
 from
 employees as e 
 join sales as s on
