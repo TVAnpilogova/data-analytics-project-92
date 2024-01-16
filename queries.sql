@@ -46,8 +46,8 @@ ORDER BY
 Третий отчет содержит информацию о выручке по дням недели. Каждая запись содержит имя и фамилию продавца, день недели и суммарную выручку.
 select
   CONCAT(e.first_name, ' ', e.last_name) AS name,
-  TO_CHAR(s.sale_date + INTERVAL '1 day', 'day') AS weekday, -- Сдвигаем день на 1, чтобы понедельник имел порядковый номер 0
-  ROUND(SUM(p.price * s.quantity), 0) AS income
+  TO_CHAR(s.sale_date, 'day') AS weekday, -- Сдвигаем день на 1, чтобы понедельник имел порядковый номер 0
+  ROUND (SUM(p.price * s.quantity), 0) AS income
 from
   employees as e 
 join sales as s on
@@ -57,12 +57,12 @@ join products as p on
 GROUP BY
   e.last_name,
   e.first_name,
-  TO_CHAR(s.sale_date + INTERVAL '1 day', 'day')  -- Группируем по сдвинутому порядковому номеру дня недели
+  weekday
 ORDER BY
-  EXTRACT(dow from MIN(s.sale_date))::int, -- Приводим к целому числу для сортировки
-  name,
-  EXTRACT(dow from MIN(s.sale_date))
+  EXTRACT(isodow from MIN(s.sale_date)), -- Приводим к целому числу для сортировки
+  name
  ;
+
 
 Первый отчет - количество покупателей в разных возрастных группах: 16-25, 26-40 и 40+
 SELECT
